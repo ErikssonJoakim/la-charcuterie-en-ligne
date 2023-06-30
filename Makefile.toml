@@ -1,0 +1,3 @@
+[config]
+default_to_workspace = false
+min_version = "0.36.9"
