@@ -1,7 +1,12 @@
+mod db_connection;
+
 use actix_web::{ App, HttpServer};
+use dotenvy::dotenv;
 
 #[actix_web::main]
 async fn main() -> std::io::Result<()> {
+    dotenv().ok();
+
     HttpServer::new(move || {
         App::new()
     })
