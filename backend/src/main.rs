@@ -1,4 +1,5 @@
 mod db_connection;
+mod models;
 
 use actix_web::{ App, HttpServer};
 use dotenvy::dotenv;
