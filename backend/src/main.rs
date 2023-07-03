@@ -1,6 +1,6 @@
 mod api;
 mod db_connection;
-mod models;
+mod model;
 
 use api::{product::product_config, products::products_config};
 use actix_web::{web, App, HttpServer};

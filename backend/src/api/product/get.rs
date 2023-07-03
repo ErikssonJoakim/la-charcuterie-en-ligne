@@ -1,4 +1,4 @@
-use crate::{db_connection::{Database, DatabaseConnection}, models::SalesItem};
+use crate::{db_connection::{Database, DatabaseConnection}, model::SalesItem};
 use actix_web::{web::{Json, Path}, get, HttpResponse, Responder};
 use mysql::{ prelude::Queryable, Error, DriverError, params, Statement, PooledConn};
 use std::io::{Error as StdIoError, ErrorKind::InvalidData};
