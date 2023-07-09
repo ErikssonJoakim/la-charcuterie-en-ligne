@@ -2,23 +2,39 @@
 default_to_workspace = false
 min_version = "0.36.9"
 
-[tasks.build-backend]
-cwd = "./backend/"
+[tasks.format-rust]
+args = ["fmt"]
 command = "cargo"
+dependencies = ["install-rustfmt"]
+
+[tasks.format-toml]
+args = ["fmt"]
+command = "taplo"
+dependencies = ["install-taplo-cli"]
+
+[tasks.format]
+dependencies = ["format-rust", "format-toml"]
+
+[tasks.build-backend]
 args = ["build"]
+command = "cargo"
+cwd = "./backend/"
 
 [tasks.serve-backend]
-cwd = "./backend/"
-command = "cargo"
 args = ["run"]
+command = "cargo"
+cwd = "./backend/"
 
 [tasks.run-backend]
-run_task = { name = [
-   "build-backend",
-    "serve-backend"
-] }
+run_task = { name = ["build-backend", "serve-backend"] }
 
 [tasks.dev-backend]
-cwd = "./backend/"
-command = "cargo"
 args = ["watch", "-x", "run"]
+command = "cargo"
+cwd = "./backend/"
+
+[tasks.install-rustfmt]
+install_crate = { rustup_component_name = "rustfmt" }
+
+[tasks.install-taplo-cli]
+install_crate = { crate_name = "taplo-cli", binary = "taplo", test_arg = "--help" }
