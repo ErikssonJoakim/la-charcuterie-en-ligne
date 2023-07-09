@@ -31,7 +31,7 @@ pub async fn get_products() -> impl Responder {
                DriverError::CouldNotConnect(None) => HttpResponse::ServiceUnavailable().finish(),
                _ => HttpResponse::InternalServerError().finish()
            },
-           Error::IoError(e) => HttpResponse::BadRequest().finish(),
+           Error::IoError(_) => HttpResponse::BadRequest().finish(),
            _ => HttpResponse::InternalServerError().finish()
        } 
     }
