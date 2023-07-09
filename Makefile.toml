@@ -7,10 +7,38 @@ args = ["fmt"]
 command = "cargo"
 dependencies = ["install-rustfmt"]
 
+[tasks.lint-rust-format]
+args = ["fmt", "--all", "--", "--check"]
+command = "cargo"
+dependencies = ["install-rustfmt"]
+
+[tasks.lint-rust]
+args = [
+  "clippy",
+  "--workspace",
+  "--locked",
+  "--all-targets",
+  "--",
+  "-D",
+  "clippy::all",
+  "-D",
+  "warnings",
+]
+command = "cargo"
+dependencies = ["install-clippy"]
+
+[tasks.lint-toml]
+args = ["lint"]
+command = "taplo"
+dependencies = ["install-taplo-cli"]
+
 [tasks.format-toml]
 args = ["fmt"]
 command = "taplo"
 dependencies = ["install-taplo-cli"]
+
+[tasks.lint]
+dependencies = ["lint-rust-format", "lint-rust", "lint-toml"]
 
 [tasks.format]
 dependencies = ["format-rust", "format-toml"]
@@ -32,6 +60,9 @@ run_task = { name = ["build-backend", "serve-backend"] }
 args = ["watch", "-x", "run"]
 command = "cargo"
 cwd = "./backend/"
+
+[tasks.install-clippy]
+install_crate = { rustup_component_name = "clippy" }
 
 [tasks.install-rustfmt]
 install_crate = { rustup_component_name = "rustfmt" }

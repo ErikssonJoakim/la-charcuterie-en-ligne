@@ -20,12 +20,16 @@ struct StatementQuery {
 pub async fn update_product_count(id: Path<u32>, data: Json<Data>) -> impl Responder {
     let result = Database::connect()
         .and_then(|mut conn| {
-            conn.prep(
-                "UPDATE sales_item 
-            SET quantity = quantity + :delta
-            WHERE id=:id",
-            )
-            .and_then(|stmt| Ok(StatementQuery { stmt, conn }))
+            Ok(StatementQuery {
+                stmt: conn.prep(
+                    "
+                    UPDATE sales_item 
+                    SET quantity = quantity + :delta 
+                    WHERE id=:id
+                    ",
+                )?,
+                conn,
+            })
         })
         .and_then(|mut query| {
             query.conn.exec_drop(

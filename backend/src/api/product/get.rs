@@ -19,8 +19,16 @@ struct StatementQuery {
 pub async fn get_product(id: Path<u32>) -> impl Responder {
     let result = Database::connect()
         .and_then(|mut conn| {
-            conn.prep("SELECT * FROM sales_item WHERE id=:id")
-                .and_then(|stmt| Ok(StatementQuery { stmt, conn }))
+            Ok(StatementQuery {
+                stmt: conn.prep(
+                    "
+                    SELECT * 
+                    FROM sales_item 
+                    WHERE id=:id
+                    ",
+                )?,
+                conn,
+            })
         })
         .and_then(|mut query| {
             query
