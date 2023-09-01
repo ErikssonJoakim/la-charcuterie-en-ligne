@@ -49,12 +49,10 @@ command = "cargo"
 cwd = "./backend/"
 
 [tasks.serve-backend]
+dependencies = ["build-backend"]
 args = ["run"]
 command = "cargo"
 cwd = "./backend/"
-
-[tasks.run-backend]
-run_task = { name = ["build-backend", "serve-backend"] }
 
 [tasks.dev-backend]
 args = ["watch", "-x", "run"]
