@@ -59,6 +59,17 @@ args = ["watch", "-x", "run"]
 command = "cargo"
 cwd = "./backend/"
 
+[tasks.build-client]
+args = ["build"]
+command = "trunk"
+cwd = "./client/"
+
+[tasks.serve-client]
+dependencies = ["build-client"]
+args = ["serve"]
+command = "trunk"
+cwd = "./client/"
+
 [tasks.install-clippy]
 install_crate = { rustup_component_name = "clippy" }
 
