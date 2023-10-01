@@ -1,7 +1,9 @@
 USE la_charcuterie_en_ligne;
 
-INSERT INTO product(name, cost, cost_measure)
-VALUES('jambon du pays', 12.00, 'kg');
+INSERT INTO measurement(name, abbreviation)
+VALUES('kilogram', 'kg');
+INSERT INTO product(name, cost, measurement_id)
+VALUES('jambon du pays', 12.00, 1);
 INSERT INTO label(name)
 VALUES('seche');
 INSERT INTO product_label(label_id, product_id)
