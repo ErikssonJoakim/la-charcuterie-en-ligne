@@ -16,5 +16,7 @@ VALUES(1, 1, 0.2);
 
 INSERT INTO client(name, email)
 VALUES('Joakim Eriksson', 'erikssonjoakim92@gmail.com');
-INSERT INTO command(sales_item_id, client_id, quantity, delivery_address, delivery_date, created_on)
-VALUES(1, 1, 2, 'Balma, Av. des Mimosas, 31 130', '2023-07-03', '2023-07-01T18:23:55');
+INSERT INTO relay_point(address)
+VALUES('Balma, Av. des Mimosas, 31 130');
+INSERT INTO command(client_id, relay_point_id, delivery_date, created_on)
+VALUES(1, 1, '2023-07-03', '2023-07-01T18:23:55');

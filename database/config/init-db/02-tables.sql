@@ -59,6 +59,13 @@ CREATE TABLE IF NOT EXISTS sales_item_product (
     PRIMARY KEY (id)
  );
 
+ CREATE TABLE IF NOT EXISTS client (
+    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
+    name VARCHAR(80) NOT NULL,
+    email VARCHAR(80) NOT NULL,
+    PRIMARY KEY (id)
+ );
+
  CREATE TABLE IF NOT EXISTS command (
     id INT UNSIGNED NOT NULL AUTO_INCREMENT,
     client_id INT UNSIGNED NOT NULL,
@@ -68,7 +75,7 @@ CREATE TABLE IF NOT EXISTS sales_item_product (
     updated_on DATETIME ON UPDATE NOW(),
     PRIMARY KEY (id),
     CONSTRAINT FK__client_id__command FOREIGN KEY (client_id) REFERENCES client(id),
-    CONSTRAINT FK__relay_point_id__command FOREIGN KEY (relay_point_id) REFERENCES relay_point(id),
+    CONSTRAINT FK__relay_point_id__command FOREIGN KEY (relay_point_id) REFERENCES relay_point(id)
  );
 
  CREATE TABLE IF NOT EXISTS command_sales_item (
@@ -79,11 +86,4 @@ CREATE TABLE IF NOT EXISTS sales_item_product (
     PRIMARY KEY (id),
     CONSTRAINT FK__sales_item_id__command_sales_item FOREIGN KEY (sales_item_id) REFERENCES sales_item(id),
     CONSTRAINT FK__command_id__command_sales_item FOREIGN KEY (command_id) REFERENCES command(id)
- );
-
- CREATE TABLE IF NOT EXISTS client (
-    id INT UNSIGNED NOT NULL AUTO_INCREMENT,
-    name VARCHAR(80) NOT NULL,
-    email VARCHAR(80) NOT NULL,
-    PRIMARY KEY (id)
  );
