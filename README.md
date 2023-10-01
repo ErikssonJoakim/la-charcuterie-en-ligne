@@ -15,8 +15,8 @@ Be sure to have the following properly installed:
 Build the client and backend services:
 
 ```sh
-cargo make build-backend && \
-cargo make build-client
+cargo make backend-build && \
+cargo make client-build
 ```
 
 ### Launch
@@ -26,7 +26,7 @@ cargo make build-client
 To launch the client use the following command:
 
 ```sh
-cargo make serve-client
+cargo make client-start
 ```
 
 #### Backend
@@ -34,7 +34,7 @@ cargo make serve-client
 To launch the backend use the following command:
 
 ```sh
-cargo make serve-backend
+cargo make backend-start
 ```
 
 Make sure you have your .env file ready with the necessairy variables. See .env.example in crate

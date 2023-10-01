@@ -43,29 +43,29 @@ dependencies = ["lint-rust-format", "lint-rust", "lint-toml"]
 [tasks.format]
 dependencies = ["format-rust", "format-toml"]
 
-[tasks.build-backend]
+[tasks.backend-build]
 args = ["build"]
 command = "cargo"
 cwd = "./backend/"
 
-[tasks.serve-backend]
-dependencies = ["build-backend"]
+[tasks.backend-start]
+dependencies = ["backend-build"]
 args = ["run"]
 command = "cargo"
 cwd = "./backend/"
 
-[tasks.dev-backend]
+[tasks.backend-dev]
 args = ["watch", "-x", "run"]
 command = "cargo"
 cwd = "./backend/"
 
-[tasks.build-client]
+[tasks.client-build]
 args = ["build"]
 command = "trunk"
 cwd = "./client/"
 
-[tasks.serve-client]
-dependencies = ["build-client"]
+[tasks.client-start]
+dependencies = ["client-build"]
 args = ["serve"]
 command = "trunk"
 cwd = "./client/"
