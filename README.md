@@ -41,6 +41,36 @@ Make sure you have your .env file ready with the necessairy variables. See .env.
 
 #### Database
 
-To launch the database see the [Database Readme](./database/README.md)
+There are several tasks available to manipulate the database.
 
-Make sure you have your .env file ready with the necessairy variables. See .env.example in folder
+Make sure you have your .env file ready with the necessairy variables. See .env.example in the database folder
+
+Build the database image
+
+```sh
+cargo make backend-build
+```
+
+Start the database
+
+```sh
+cargo make backend-start
+```
+
+Query the database. Takes a string query as argument
+
+```sh
+cargo make backend-query
+```
+
+Stops the database
+
+```sh
+cargo make backend-stop
+```
+
+Clean the database. Deleting the container and image, with the choice to also delete the database
+
+```sh
+cargo make backend-clean
+```
