@@ -21,7 +21,7 @@ cargo make client-build
 
 ### Launch
 
-#### Client
+#### 💻 Client
 
 To launch the client use the following command:
 
@@ -29,7 +29,7 @@ To launch the client use the following command:
 cargo make client-start
 ```
 
-#### Backend
+#### 🏢 Backend
 
 To launch the backend use the following command:
 
@@ -39,7 +39,7 @@ cargo make backend-start
 
 Make sure you have your .env file ready with the necessairy variables. See .env.example in crate
 
-#### Database
+#### 💾 Database
 
 There are several tasks available to manipulate the database.
 
