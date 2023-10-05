@@ -70,6 +70,93 @@ args = ["serve"]
 command = "trunk"
 cwd = "./client/"
 
+[tasks.database-build]
+description = "Build database dockerimage"
+cwd = "./database/"
+script = '''
+echo "👷 Building database image"
+echo "🔎 Checking if \`Docker\` is installed..."
+if ! docker --version; then
+   echo "\n❌ Docker could not be found\n"
+   echo "Exiting task"
+   exit 1
+fi
+
+docker build -t ${DB_DOCKER_IMAGE} .
+'''
+
+[tasks.database-start]
+description = "Run database"
+dependencies = ["database-build"]
+cwd = "./database/"
+script = '''
+echo "🏎️ Running database container"
+if ! docker ps -a | grep -q ${DB_CONTAINER}; then
+  docker run --restart=always -d \
+  --env-file=.env \
+  -v ${DATA_DIRECTORY}:/var/lib/mysql \
+  --name ${DB_CONTAINER} \
+  ${DB_DOCKER_IMAGE}
+  else
+    docker start ${DB_CONTAINER}
+fi
+'''
+
+[tasks.database-query]
+description = "Query database container. Takes a query as argument"
+script = '''
+echo "❓ Query database container"
+if docker ps | grep -q ${DB_CONTAINER}; then
+  DB_USERNAME=$(grep 'MYSQL_ADMIN_USERNAME=' ${DB_HOME}/.env | cut -d'=' -f2)
+  DB_PASSWORD=$(grep 'MYSQL_ADMIN_PASSWORD=' ${DB_HOME}/.env | cut -d'=' -f2)
+  if [ ! ${DB_USERNAME} ] || [ ! ${DB_PASSWORD} ]; then
+    echo "❗️ DB_USERNAME and DB_PASSWORD not defined in database .env file"
+    exit 1
+  fi
+  QUERY=$1
+  docker exec -i ${DB_CONTAINER} mysql -u${DB_USERNAME} -p${DB_PASSWORD} ${DB_NAME} -e "${QUERY}"
+  else
+    echo "❗️ No database found"
+fi
+'''
+
+[tasks.database-stop]
+description = "Stop database container"
+cwd = "./database/"
+command = "docker"
+args = ["stop", "${DB_CONTAINER}"]
+
+[tasks.database-clean]
+description = "Clean database"
+script = '''
+echo "🏎️ Cleaning database container"
+
+while true; do
+  read -p "Want to delete the database volume? Enter 'y' or 'n': " ANSWER
+  if [ "${ANSWER}" == "y" ]; then
+    echo "📀 Deleting database"
+    rm -rf ${DATA_DIRECTORY}
+    break
+  elif [ "${ANSWER}" == "n" ]; then
+    break
+  fi
+done
+
+if docker ps -a | grep -q ${DB_CONTAINER}; then
+  echo "🧹 cleaning database container"
+  if docker ps | grep -q ${DB_CONTAINER}; then
+    docker stop ${DB_CONTAINER} > /dev/null && docker rm ${DB_CONTAINER}
+  else 
+    docker rm ${DB_CONTAINER}
+  fi
+fi
+
+if docker image list | grep -q ${DB_DOCKER_IMAGE}; then
+  echo "🧹 cleaning database image"
+  docker image rm ${DB_DOCKER_IMAGE}
+fi
+'''
+
 [tasks.install-clippy]
 install_crate = { rustup_component_name = "clippy" }
 
@@ -78,3 +165,10 @@ install_crate = { rustup_component_name = "rustfmt" }
 
 [tasks.install-taplo-cli]
 install_crate = { crate_name = "taplo-cli", binary = "taplo", test_arg = "--help" }
+
+[env]
+DB_NAME = "la_charcuterie_en_ligne"
+DB_DOCKER_IMAGE = "db-image-${DB_NAME}"
+DB_CONTAINER = "db-${DB_NAME}"
+DATA_DIRECTORY = "${PWD}/database/data"
+DB_HOME = "./database"
