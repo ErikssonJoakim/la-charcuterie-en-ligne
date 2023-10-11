@@ -18,11 +18,11 @@ impl FromRow for SalesItem {
         Self: Sized,
     {
         Ok(SalesItem {
-            id: row.get("id").unwrap(),
-            name: row.get("name").unwrap(),
-            image: row.get("image").unwrap(),
-            price: row.get("price").unwrap(),
-            quantity: row.get("quantity").unwrap(),
+            id: row.get("id").ok_or(FromRowError(row.clone()))?,
+            name: row.get("name").ok_or(FromRowError(row.clone()))?,
+            image: row.get("image").ok_or(FromRowError(row.clone()))?,
+            price: row.get("price").ok_or(FromRowError(row.clone()))?,
+            quantity: row.get("quantity").ok_or(FromRowError(row.clone()))?,
             description: row.get("description"),
             comparison_price: row.get("comparison_price"),
         })
