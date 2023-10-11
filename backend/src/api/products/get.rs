@@ -7,13 +7,8 @@ use actix_web::{
     web::{Json, Path},
     HttpResponse, Responder,
 };
-use mysql::{params, prelude::Queryable, DriverError, Error, PooledConn, Row, Statement};
+use mysql::{params, prelude::Queryable, DriverError, Error, Row};
 use std::io::{Error as StdIoError, ErrorKind::InvalidData};
-
-struct StatementQuery {
-    stmt: Statement,
-    conn: PooledConn,
-}
 
 #[get("")]
 pub async fn get_products() -> impl Responder {
@@ -72,21 +67,15 @@ pub async fn get_products() -> impl Responder {
 pub async fn get_product(id: Path<u32>) -> impl Responder {
     let result = Database::connect()
         .and_then(|mut conn| {
-            Ok(StatementQuery {
-                stmt: conn.prep(
-                    "
-                    SELECT * 
-                    FROM sales_item 
-                    WHERE id=:id
-                    ",
-                )?,
-                conn,
-            })
-        })
-        .and_then(|mut query| {
-            query
-                .conn
-                .exec_first(query.stmt, params! { "id" => id.into_inner() })
+            let stmt = conn.prep(
+                "
+                SELECT * 
+                FROM sales_item 
+                WHERE id=:id
+                ",
+            )?;
+
+            conn.exec_first(stmt, params! { "id" => id.into_inner() })
         })
         .and_then(|sales_item: Option<SalesItem>| {
             sales_item.ok_or(Error::IoError(StdIoError::new(
